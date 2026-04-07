@@ -25,32 +25,45 @@
         projectRoot = ./.;
       };
 
-      # This example is only using x86_64-linux TODO
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      forAllSystems =
+        function:
+        nixpkgs.lib.genAttrs [
+          "x86_64-linux"
+          "aarch64-linux"
+          "x86_64-darwin"
+          "aarch64-darwin"
+        ] (system: function nixpkgs.legacyPackages.${system});
 
-      python = pkgs.python3;
+      # python = pkgs.python3;
     in
     {
       # Create a development shell containing dependencies from `pyproject.toml`
-      devShells.x86_64-linux.default =
-        let
-          # Returns a function that can be passed to `python.withPackages`
-          arg = project.renderers.withPackages { inherit python; };
+      devShells = forAllSystems (pkgs: {
+        default =
+          let
+            python = pkgs.python3;
+            # Returns a function that can be passed to `python.withPackages`
+            arg = project.renderers.withPackages { inherit python; };
 
-          # Returns a wrapped environment (virtualenv like) with all our packages
-          pythonEnv = python.withPackages arg;
-        in
-        # Create a devShell like normal.
-        pkgs.mkShell { packages = [ pythonEnv ]; };
+            # Returns a wrapped environment (virtualenv like) with all our packages
+            pythonEnv = python.withPackages arg;
+          in
+          # Create a devShell like normal.
+          pkgs.mkShell { packages = [ pythonEnv ]; };
+
+      });
 
       # Build our package using `buildPythonPackage
-      packages.x86_64-linux.default =
-        let
-          # Returns an attribute set that can be passed to `buildPythonPackage`.
-          attrs = project.renderers.buildPythonPackage { inherit python; };
-        in
-        # Pass attributes to buildPythonPackage.
-        # Here is a good spot to add on any missing or custom attributes.
-        python.pkgs.buildPythonPackage attrs;
+      packages = forAllSystems (pkgs: {
+        default =
+          let
+            python = pkgs.python3;
+            # Returns an attribute set that can be passed to `buildPythonPackage`.
+            attrs = project.renderers.buildPythonPackage { inherit python; };
+          in
+          # Pass attributes to buildPythonPackage.
+          # Here is a good spot to add on any missing or custom attributes.
+          python.pkgs.buildPythonPackage attrs;
+      });
     };
 }
