@@ -39,8 +39,9 @@ class CirculationGradeResponse(BasicGradeResponse):
     def __repr__(self) -> str:
         lines = [super().__repr__()]
         lines.append(f"{self.num_errors} Errors:")
-        for err_type, errors in self.errors:
-            lines.append(f"\t- {err_type}: {', '.join(errors)}")
+        for err_type, errors in self.errors.items():
+            if errors:
+                lines.append(f"  - {err_type.capitalize()}: {', '.join(errors)}")
         return "\n".join(lines)
 
 
