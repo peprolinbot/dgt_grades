@@ -156,7 +156,7 @@ class DGTGradeChecker:
                     num_errors=num_errors,
                     maneuvers=maneuvers,
                 )
-            elif "TEÓRICO" in tipo_examen:
+            elif "TEÓRICO" in tipo_examen or tipo_examen == "ESPECÍFICO":
                 num_errors = int(
                     soup.find(id="formularioResultadoNotas:j_id38:0:j_id78").text
                 )
