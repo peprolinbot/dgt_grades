@@ -1,0 +1,25 @@
+[project]
+version = "v0.2"
+keywords = ['dgt', 'exam', 'grade']
+name = "dgt_grades"
+description = "Python API wrapper for the city of A Coruña public transport"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Pedro Rey Anca", email = "contact@peprolinbot.com" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = ["requests>=2.32.3", "beautifulsoup4>=4.13.3"]
+
+[project.urls]
+homepage = "https://github.com/peprolinbot/dgt_grades"
+documentation = "https://peprolinbot.github.io/dgt_grades"
+repository = "https://github.com/peprolinbot/dgt_grades"
+
+[project.scripts]
+dgt-grade-check= "dgt_grades.__main__:main"
