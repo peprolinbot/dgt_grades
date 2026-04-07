@@ -1,5 +1,6 @@
 import argparse
 from datetime import datetime
+import json
 from .check_grade import DGTGradeChecker
 
 
@@ -21,6 +22,12 @@ def main():
     parser.add_argument(
         "birth_date", type=str, help="Your birth date, in DD/MM/YYYY format"
     )
+    parser.add_argument(
+        "-j",
+        "--json",
+        action="store_true",
+        help="Print the output in JSON format",
+    )
 
     args = parser.parse_args()
 
@@ -35,7 +42,10 @@ def main():
         args.DNI, exam_date, args.license_class, birth_date
     )
 
-    print(grade)
+    if args.json:
+        print(json.dumps(grade.__dict__, ensure_ascii=False))
+    else:
+        print(grade)
 
 
 if __name__ == "__main__":
